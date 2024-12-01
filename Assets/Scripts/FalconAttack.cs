@@ -38,7 +38,7 @@ public class FalconAttack : MonoBehaviour
     private void OnDisable()
     {
         PigeonHealth.PigeonDied -= Stop;
-        FalconHealth.FalconDied += Stop;
+        FalconHealth.FalconDied -= Stop;
     }
 
     private void Stop() 

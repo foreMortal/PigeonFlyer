@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class CitiesDataHandler 
 {
     public CityMenuObject[] cities = new CityMenuObject[] { };

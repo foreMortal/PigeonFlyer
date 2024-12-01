@@ -19,6 +19,9 @@ public class Shop : MonoBehaviour
 
     private void Awake()
     {
+#if UNITY_EDITOR
+#endif
+        dataHandler = YandexGame.savesData.shopDataHandler;
         if (YandexGame.SDKEnabled)
             dataHandler = YandexGame.savesData.shopDataHandler;
 

@@ -21,6 +21,9 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+# if UNITY_EDITOR
+        citiesData = YandexGame.savesData.citiesData;
+#endif
         if (YandexGame.SDKEnabled)
             citiesData = YandexGame.savesData.citiesData;
 
@@ -30,6 +33,9 @@ public class MainMenu : MonoBehaviour
 
         cityIndex = citiesObjects[number].cityIndex;
         UpdateUI();
+
+        YandexGame.savesData.t++;
+        YandexGame.SaveProgress();
     }
 
     public void BuyNewObject(IMenuObject obj)

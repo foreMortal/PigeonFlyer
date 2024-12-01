@@ -11,11 +11,6 @@
 
         public ShopDataHandler shopDataHandler;
         public CitiesDataHandler citiesData;
-
-        public SavesYG()
-        {
-            shopDataHandler = new();
-            citiesData = new ();
-        }
+        public int t;
     }
 }

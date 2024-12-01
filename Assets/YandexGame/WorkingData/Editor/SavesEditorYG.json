@@ -1,0 +1,32 @@
+{
+  "idSave": 6,
+  "isFirstSession": false,
+  "language": "ru",
+  "promptDone": false,
+  "shopDataHandler": {
+    "boughtObjects": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "coins": 20,
+    "choosenPigeon": 0
+  },
+  "citiesData": {
+    "cities": [
+      {
+        "cityIndex": 0,
+        "distanceTillBoss": 129,
+        "cityName": "FirstCity",
+        "bestDistance": 91,
+        "bestCollect": 16,
+        "bossesDefeated": 0
+      }
+    ],
+    "pigeonIndex": 0
+  },
+  "t": 6
+}
