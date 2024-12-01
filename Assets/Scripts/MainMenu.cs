@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using YG;
 
 public class MainMenu : MonoBehaviour
 {
@@ -15,15 +16,13 @@ public class MainMenu : MonoBehaviour
     private List<CityMenuObject> citiesObjects = new();
 
     private CitiesDataHandler citiesData;
-    private DataLoaderService dataLoaderService;
     private int cityIndex = 0, number;
     private int pigeonIndex = 0;
 
     private void Awake()
     {
-        dataLoaderService = new DataLoaderService();
-
-        dataLoaderService.GetDataLoaded(path, out citiesData);
+        if (YandexGame.SDKEnabled)
+            citiesData = YandexGame.savesData.citiesData;
 
         citiesData ??= new();
 
@@ -47,7 +46,8 @@ public class MainMenu : MonoBehaviour
         pigeonIndex = pigeon.index;
         citiesData.pigeonIndex = pigeonIndex;
 
-        dataLoaderService.SaveData(path, citiesData);
+        YandexGame.savesData.citiesData = citiesData;
+        YandexGame.SaveProgress();
 
         UpdateUI();
     }
@@ -60,7 +60,8 @@ public class MainMenu : MonoBehaviour
 
         UpdateButtons();
 
-        dataLoaderService.SaveData(path, citiesData);
+        YandexGame.savesData.citiesData = citiesData;
+        YandexGame.SaveProgress();
     }
 
     public void ChangeCity(int delta)

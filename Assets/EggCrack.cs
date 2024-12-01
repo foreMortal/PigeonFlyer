@@ -3,6 +3,7 @@ using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using YG;
 
 public class EggCrack : MonoBehaviour, IPointerDownHandler
 {
@@ -24,11 +25,9 @@ public class EggCrack : MonoBehaviour, IPointerDownHandler
     private float timer, coinsValue = 0, coinsGavered, distance= 0, distanceTarget;
     private bool active, ended;
     private Tweener tweener;
-    private DataLoaderService dataLoader;
 
     private void Awake()
     {
-        dataLoader = new();
         animator = GetComponent<Animator>();
         coinsGavered = coinsCollector.Coins;
         distanceTarget = distanceCounter.Distance;
@@ -83,28 +82,26 @@ public class EggCrack : MonoBehaviour, IPointerDownHandler
         if(distanceTarget > coinsObj.maxDistance)
             coinsObj.maxDistance = (int)distanceTarget;
 
-        string primalPath = Application.persistentDataPath;
-
-        SaveDataAsync(primalPath + "ShopSaves", primalPath + "citiesSaves");
+        SaveDataAsync();
     }
 
-    private async void SaveDataAsync(string shopPath, string mainPath)
+    private async void SaveDataAsync()
     {
         await Task.Run(() =>
         {
-            dataLoader.GetDataLoadedAsync(shopPath, out ShopDataHandler shopData);
+            ShopDataHandler shopData = YandexGame.savesData.shopDataHandler;
             shopData ??= new();
             shopData.coins += (int)coinsGavered;
 
-            dataLoader.GetDataLoadedAsync(mainPath, out CitiesDataHandler mainData);
+            CitiesDataHandler mainData = YandexGame.savesData.citiesData; 
             mainData ??= new();
 
             mainData.cities[coinsObj.levelNumber].bestCollect = coinsObj.maxCoins;
             mainData.cities[coinsObj.levelNumber].bestDistance = coinsObj.maxDistance;
             mainData.cities[coinsObj.levelNumber].distanceTillBoss = (int)coinsObj.distanceTillBoss;
 
-            dataLoader.SaveDataAsync(shopPath, shopData);
-            dataLoader.SaveDataAsync(mainPath, mainData);
+            YandexGame.savesData.shopDataHandler = shopData;
+            YandexGame.savesData.citiesData = mainData;
         });
     }
 

@@ -13,16 +13,14 @@ public class Shop : MonoBehaviour
 
     private int choosenPigeon;
     private int coins = 300;
-    private DataLoaderService loader;
     private ShopDataHandler dataHandler;
 
     public int ChoosenPigeon { get { return choosenPigeon; } }
 
     private void Awake()
     {
-        loader = new();
-
-        loader.GetDataLoaded(path, out dataHandler);
+        if (YandexGame.SDKEnabled)
+            dataHandler = YandexGame.savesData.shopDataHandler;
 
         dataHandler ??= new ShopDataHandler();
 
@@ -57,7 +55,8 @@ public class Shop : MonoBehaviour
         dataHandler.coins = coins;
         dataHandler.boughtObjects = objectsInShop;
 
-        loader.SaveData(path, dataHandler);
+        YandexGame.savesData.shopDataHandler = dataHandler;
+        YandexGame.SaveProgress();
     }
 
     public void ChoosePigeon(int index)
