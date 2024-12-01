@@ -19,7 +19,7 @@ public class StartGameCanvas : MonoBehaviour, IInputTaker
     private void Awake()
     {
         inputManager = InputHandler.GetComponent<IInputManager>();
-        distanceTillBoss.text = "Till Boss: " + coinsObj.distanceTillBoss + "<color=red>m</color>";
+        distanceTillBoss.text = "Till Boss: " + coinsObj.distanceTillBoss.ToString("F0") + "<color=red>m</color>";
         Hud.SetActive(false);
 
         transform.GetChild(0).gameObject.SetActive(true);
