@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
+using YG;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private GameObject endCanvas, ToolCanvas, Hud;
+    [SerializeField] private EggCrack crack;
+    [SerializeField] private GameObject ToolCanvas, Hud;
     [SerializeField] private CameraLateUpdateRoutine[] routineScripts;
 
     private bool active;
@@ -27,9 +29,9 @@ public class CameraManager : MonoBehaviour
             gameEndTimer -= Time.deltaTime;
             if(gameEndTimer <= 0f)
             {
-                endCanvas.SetActive(true);
                 ToolCanvas.SetActive(false);
                 Hud.SetActive(false);
+                crack.OpenEndMenu();
                 //Time.timeScale = 0f;
             }
         }

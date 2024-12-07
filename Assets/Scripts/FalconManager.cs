@@ -4,14 +4,15 @@ using UnityEngine;
 public class FalconManager : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rewardCoin;
-    [SerializeField] private CoinsCollector collector;
+    [SerializeField] private PigeonSpawner collectorHandler;
     [SerializeField] private Falcon falcon;
     [SerializeField] private FalconHealth health;
     [SerializeField] private CoinsScriptableObject coinsObj;
     [SerializeField] private DistanceCounter playerCounter;
 
+    private CoinsCollector collector;
     private List<Rigidbody2D> coins = new List<Rigidbody2D>();
-    private bool active;
+    private bool active, arrived;
     private int rewardForBoss;
     private CameraManager manager;
 
@@ -23,6 +24,12 @@ public class FalconManager : MonoBehaviour
     private void OnDisable()
     {
         manager.playerDied -= PlayerDied;
+    }
+
+    private void Start()
+    {
+        collector = collectorHandler.Collector;
+        playerCounter = collectorHandler.Counter;
     }
 
     private void Awake()
@@ -46,17 +53,23 @@ public class FalconManager : MonoBehaviour
         {
             falcon.Arrive();
             health.Arrive();
+
             active = false;
+            arrived = true;
+            
+            coinsObj.distanceTillBoss = 150f + (25f * coinsObj.defeatedBosses);
         }
     }
 
     private void LateUpdate()
     {
-        coinsObj.distanceTillBoss -= playerCounter.LastDelta;
+        if(!arrived)
+            coinsObj.distanceTillBoss -= playerCounter.LastDelta;
     }
 
     public void FalconDied()
     {
+        arrived = false;
         active = true;
         falcon.gameObject.SetActive(false);
 

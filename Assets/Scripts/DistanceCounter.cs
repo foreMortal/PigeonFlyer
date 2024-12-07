@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class DistanceCounter : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class DistanceCounter : MonoBehaviour
     private float distancePassed, lastDelta;
     private int prevTextValue;
     private bool active;
+    private string record;
 
     public float Distance { get { return distancePassed; } }
     public float LastDelta { get { return lastDelta; } }
@@ -24,10 +26,19 @@ public class DistanceCounter : MonoBehaviour
         PigeonHealth.PigeonDied += Stop;
     }
 
-    private void Awake()
+    public void SetTexts(Text distance, Text best)
     {
+        if (YandexGame.lang == "ru")
+            record = "Рекорд: ";
+        else if (YandexGame.lang == "en")
+            record = "Best: ";
+
+        distanceText = distance;
+        this.best = best;
+
         fly = GetComponent<PigeonFly>();
-        best.text = "Best: " + coinObj.maxDistance + "m";
+
+        best.text = record + coinObj.maxDistance + "m";
         distanceText.text = prevTextValue + " <color=red>m</color>";
         active = true;
     }

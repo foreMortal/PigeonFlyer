@@ -3,12 +3,13 @@ using DG.Tweening;
 
 public class Falcon : MonoBehaviour
 {
-    [SerializeField] private Transform pigeon;
+    [SerializeField] private PigeonSpawner spawner;
     [SerializeField] private Vector3 offset;
     [SerializeField] private float ySpeed;
 
+    private Transform pigeon;
     private Vector3 startOffset = new Vector3(15f, 5f, 0);
-    private bool active;
+    private bool active, pigeonGavered;
     private float arriveTimer, verSpeed, yPos;
 
     public float VerSpeed { get { return verSpeed; } set { verSpeed = value; } }
@@ -32,6 +33,11 @@ public class Falcon : MonoBehaviour
 
     public void Arrive()
     {
+        if (!pigeonGavered)
+        {
+            pigeon = spawner.PlayerTransform;
+            pigeonGavered = true;
+        }
         gameObject.SetActive(true);
         transform.position = pigeon.position + startOffset;
         arriveTimer = 0f;

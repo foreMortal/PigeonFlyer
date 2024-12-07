@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class CoinsCollector : MonoBehaviour
 {
-    [SerializeField] private Text coinsText;
-    [SerializeField] private Camera cam;
-    [SerializeField] private Transform coin;
+    [SerializeField] private SoundManager sound;
+    private Text coinsText;
+    private Transform coin;
 
     private Collider2D[] results = new Collider2D[1];
     private ContactFilter2D filter;
@@ -32,8 +32,11 @@ public class CoinsCollector : MonoBehaviour
         active = false;
     }
 
-    private void Awake()
+    public void SelfAwake(Text coinsText, Transform coinsImage)
     {
+        this.coinsText = coinsText;
+        coin = coinsImage;
+
         filter.SetLayerMask(1 << 8);
         filter.useTriggers = true;
 
@@ -47,7 +50,7 @@ public class CoinsCollector : MonoBehaviour
         {
             if (Time.frameCount % 2 == 0)
             {
-                if (Physics2D.OverlapCircle(transform.position + new Vector3(0f, -0.06f), 0.3f, filter, results) > 0)
+                if (Physics2D.OverlapCircle(transform.position + new Vector3(-0.35f, -0.06f), 0.3f, filter, results) > 0)
                 {
                     results[0].GetComponent<ICollectables>().Collect(this);
                 }
@@ -86,6 +89,7 @@ public class CoinsCollector : MonoBehaviour
                 {
                     rewardedCoins[i].gameObject.SetActive(false);
                 }
+                sound.Play();
                 coins += rewardForBoss;
                 UpdateCoinsUI();
             }

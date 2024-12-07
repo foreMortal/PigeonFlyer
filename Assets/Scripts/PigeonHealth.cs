@@ -4,6 +4,10 @@ using Random = UnityEngine.Random;
 
 public class PigeonHealth : MonoBehaviour
 {
+#if UNITY_EDITOR
+    public float x, y, rad;
+#endif
+
     [SerializeField] private float deathPunchX, deathPunchY;
     [SerializeField] private float deathGravity;
     [SerializeField] private LayerMask mask;
@@ -12,7 +16,8 @@ public class PigeonHealth : MonoBehaviour
     private Collider2D[] results = new Collider2D[1];
     private Rigidbody2D rb;
     private Animator animator;
-    private bool firstInvoke = true;
+    private bool firstInvoke = true, end;
+    private float endTimer;
 
     public static event Action PigeonDied;
 
@@ -23,11 +28,27 @@ public class PigeonHealth : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position + new Vector3(x, y), rad);
+    }
+#endif
+
+    private void Update()
+    {
+        if (end && endTimer < Time.time)
+        {
+            end = false;
+            gameObject.SetActive(false);
+        }
+    }
+
     private void FixedUpdate()
     {
         if(Time.frameCount%2 == 1)
         {
-            if(Physics2D.OverlapCircle(transform.position + new Vector3(0f, -0.06f), 0.3f, filter, results) > 0)
+            if(Physics2D.OverlapCircle(transform.position + new Vector3(-0.35f, -0.06f), 0.25f, filter, results) > 0)
             {
                 PigeonFly fly = GetComponent<PigeonFly>();
                 Destroy(fly);
@@ -45,6 +66,8 @@ public class PigeonHealth : MonoBehaviour
                 {
                     PigeonDied?.Invoke();
                     firstInvoke = false;
+                    end = true;
+                    endTimer = Time.time + 5f;
                 }
             }
         }

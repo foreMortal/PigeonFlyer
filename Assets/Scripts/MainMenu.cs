@@ -19,20 +19,42 @@ public class MainMenu : MonoBehaviour
     private int cityIndex = 0, number;
     private int pigeonIndex = 0;
 
+    private void OnEnable()
+    {
+        YandexGame.GetDataEvent += LoadData;
+    }
+    private void OnDisable()
+    {
+        YandexGame.GetDataEvent -= LoadData;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.P) && Input.GetKey(KeyCode.R))
+        {
+            YandexGame.ResetSaveProgress();
+            YandexGame.SaveProgress();
+        }
+    }
+
     private void Awake()
     {
-# if UNITY_EDITOR
-        citiesData = YandexGame.savesData.citiesData;
-#endif
+        YandexGame.GameplayStop();
+
         if (YandexGame.SDKEnabled)
+        {
             citiesData = YandexGame.savesData.citiesData;
 
-        citiesData ??= new();
+            citiesData ??= new();
 
-        citiesObjects.AddRange(citiesData.cities);
+            citiesObjects.InsertRange(0, citiesData.cities);
 
-        cityIndex = citiesObjects[number].cityIndex;
-        UpdateUI();
+            pigeonIndex = citiesData.pigeonIndex;
+            cityIndex = citiesObjects[number].cityIndex;
+
+            srptObj.pigeonIdx = pigeonIndex;
+            UpdateUI();
+        }
 
         YandexGame.savesData.t++;
         YandexGame.SaveProgress();
@@ -47,10 +69,27 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    private void LoadData()
+    {
+        citiesData = YandexGame.savesData.citiesData;
+
+        citiesData ??= new();
+
+        citiesObjects.InsertRange(0, citiesData.cities);
+
+        pigeonIndex = citiesData.pigeonIndex;
+        cityIndex = citiesObjects[number].cityIndex;
+
+        srptObj.pigeonIdx = pigeonIndex;
+        UpdateUI();
+    }
+
     private void ChoosePigeon(PigeonMenuObject pigeon)
     {
         pigeonIndex = pigeon.index;
         citiesData.pigeonIndex = pigeonIndex;
+
+        srptObj.pigeonIdx = pigeonIndex;
 
         YandexGame.savesData.citiesData = citiesData;
         YandexGame.SaveProgress();

@@ -4,24 +4,27 @@ using UnityEngine;
 [RequireComponent(typeof(EggsManager))]
 public class TrowEggs : MonoBehaviour, IInputTaker
 {
-    [SerializeField] private float TimeBetweenShots;
-    [SerializeField] GameObject inputHandler;
+    [SerializeField] protected float TimeBetweenShots;
 
-    private EggsManager manager;
+    protected EggsManager manager;
     private IInputManager inputManager;
-    private bool active;
-    private float timer;
+    protected bool active;
+    protected float timer;
 
     private void Awake()
     {
         active = true;
         manager = GetComponent<EggsManager>();
-        inputManager = inputHandler.GetComponent<IInputManager>();
+    }
+
+    public void SetInputManager(IInputManager m)
+    {
+        inputManager = m;
+        inputManager.ManageInputEvent(this, true);
     }
 
     private void OnEnable()
     {
-        inputManager.ManageInputEvent(this, true);
         PigeonHealth.PigeonDied += StopGame;
     }
     private void OnDisable()
@@ -35,19 +38,19 @@ public class TrowEggs : MonoBehaviour, IInputTaker
         active = false;
     }
 
-    private void FireEgg(bool state)
+    protected virtual void FireEgg(bool state)
     {
         if (active)
         {
             if (state && timer <= 0f)
             {
-                manager.ThrowEgg(Vector3.right);
+                manager.ThrowEgg(transform.position, Vector3.right);
                 timer = TimeBetweenShots;
             }
         }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (active)
         {

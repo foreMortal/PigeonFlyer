@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PigeonFly : MonoBehaviour, IInputTaker
 {
-    [SerializeField] private GameObject InputHandler;
     [SerializeField] private float speed, gravityScale, flyingUpStrength, maxVertSpeed, minVertSpeed;
 
     private ContactFilter2D filter;
@@ -17,13 +16,15 @@ public class PigeonFly : MonoBehaviour, IInputTaker
 
     public float Speed { get { return speed; } set { speed = value; } }
 
-    private void OnEnable()
-    {
-        inputManager.ManageInputEvent(this, true);
-    }
     private void OnDisable()
     {
         inputManager.ManageInputEvent(this, false);
+    }
+
+    public void SetInputManager(IInputManager m)
+    {
+        inputManager = m;
+        inputManager.ManageInputEvent(this, true);
     }
 
     private void Awake()
@@ -31,7 +32,6 @@ public class PigeonFly : MonoBehaviour, IInputTaker
         active = true;
         filter.SetLayerMask(1 << 7);
 
-        inputManager = InputHandler.GetComponent<IInputManager>();
         animator = GetComponent<Animator>();
         direction.x = speed;
         rb = GetComponent<Rigidbody2D>();
@@ -42,7 +42,7 @@ public class PigeonFly : MonoBehaviour, IInputTaker
         if (active)
         {
             direction.x = speed;
-            
+
             if (inputHeldDown) gravity.y += flyingUpStrength * Time.deltaTime;
 
             gravity.y -= Time.deltaTime * gravityScale;

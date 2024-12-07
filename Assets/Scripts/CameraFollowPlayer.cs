@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class CameraFollowPlayer : CameraLateUpdateRoutine
 {
-    [SerializeField] private Transform player;
+    [SerializeField] private PigeonSpawner playerHandler;
     [Tooltip("offset between camera and player")]
     [SerializeField] private Vector3 offset;
 
+    private Transform player;
     private CameraManager manager;
     private bool active;
 
@@ -22,6 +23,11 @@ public class CameraFollowPlayer : CameraLateUpdateRoutine
     {
         manager = GetComponent<CameraManager>();
         active = true;
+    }
+
+    private void Start()
+    {
+        player = playerHandler.PlayerTransform;
     }
 
     private void PlayerDied()

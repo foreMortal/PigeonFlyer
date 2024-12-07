@@ -1,5 +1,5 @@
 {
-  "idSave": 6,
+  "idSave": 56,
   "isFirstSession": false,
   "language": "ru",
   "promptDone": false,
@@ -12,21 +12,22 @@
       false,
       false
     ],
-    "coins": 20,
+    "coins": 13,
     "choosenPigeon": 0
   },
   "citiesData": {
     "cities": [
       {
         "cityIndex": 0,
-        "distanceTillBoss": 129,
+        "distanceTillBoss": 164,
         "cityName": "FirstCity",
-        "bestDistance": 91,
-        "bestCollect": 16,
+        "bestDistance": 52,
+        "bestCollect": 9,
         "bossesDefeated": 0
       }
     ],
     "pigeonIndex": 0
   },
-  "t": 6
+  "t": 11,
+  "mute": false
 }

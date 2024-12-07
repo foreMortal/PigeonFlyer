@@ -146,13 +146,13 @@ public class FalconAttack : MonoBehaviour
         round.SetActive(false);
         for(int i = 0; i < 7; i++)
         {
-            eggManager.ThrowEgg(throwVecs[eggIndex++]);
+            eggManager.ThrowEgg(transform.parent.position, throwVecs[eggIndex++]);
         }
     }
 
     public void FireEgg()
     {
-        eggManager.ThrowEgg(throwVecs[eggIndex++]);
+        eggManager.ThrowEgg(transform.position, throwVecs[eggIndex++]);
     }
 
     private void SetupAttack(float verSpeed, float delay, Vector3 radiusPos, string animName, bool radius)

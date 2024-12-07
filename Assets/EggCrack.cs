@@ -2,15 +2,12 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Threading.Tasks;
 using YG;
 
 public class EggCrack : MonoBehaviour, IPointerDownHandler
 {
+    [SerializeField] private GameObject GameEndMenu;
     [SerializeField] private CoinsScriptableObject coinsObj;
-    [SerializeField] private FalconManager falcon;
-    [SerializeField] private CoinsCollector coinsCollector;
-    [SerializeField] private DistanceCounter distanceCounter;
     [SerializeField] private GameObject endMenu;
     [SerializeField] private Text coinsText, distanceText;
     [SerializeField] private Transform coinsTarget;
@@ -18,6 +15,10 @@ public class EggCrack : MonoBehaviour, IPointerDownHandler
     [SerializeField] private float tapsNeeded;
     [SerializeField] private GameObject coin;
 
+    private ShopDataHandler shopData;
+    private CitiesDataHandler cityData;
+    private CoinsCollector coinsCollector;
+    private DistanceCounter distanceCounter;
     private Transform[] coins = new Transform[15];
     private Animator animator;
     private int taps, nextStep, steps = 1;
@@ -29,11 +30,38 @@ public class EggCrack : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        nextStep = (int)(tapsNeeded * 0.3f);
+
+        shopData = YandexGame.savesData.shopDataHandler;
+        shopData ??= new();
+
+        cityData = YandexGame.savesData.citiesData;
+        cityData ??= new();
+
+        GameEndMenu.SetActive(false);
+    }
+
+    public void OpenEndMenu()
+    {
+        GameEndMenu.SetActive(true);
+        SaveData();
+    }
+
+    public void SaveData()
+    {
         coinsGavered = coinsCollector.Coins;
         distanceTarget = distanceCounter.Distance;
 
-        nextStep = (int)(tapsNeeded * 0.3f);
         CountStatistic();
+
+        YandexGame.GameplayStop();
+    }
+
+    public void SelfAwake(CoinsCollector collector, DistanceCounter counter)
+    {
+        coinsCollector = collector;
+        distanceCounter = counter;
     }
 
     public void OnPointerDown(PointerEventData data)
@@ -85,24 +113,16 @@ public class EggCrack : MonoBehaviour, IPointerDownHandler
         SaveDataAsync();
     }
 
-    private async void SaveDataAsync()
+    private void SaveDataAsync()
     {
-        await Task.Run(() =>
-        {
-            ShopDataHandler shopData = YandexGame.savesData.shopDataHandler;
-            shopData ??= new();
-            shopData.coins += (int)coinsGavered;
+        shopData.coins += (int)coinsGavered;
 
-            CitiesDataHandler mainData = YandexGame.savesData.citiesData; 
-            mainData ??= new();
+        cityData.cities[coinsObj.levelNumber].bestCollect = coinsObj.maxCoins;
+        cityData.cities[coinsObj.levelNumber].bestDistance = coinsObj.maxDistance;
+        cityData.cities[coinsObj.levelNumber].distanceTillBoss = (int)coinsObj.distanceTillBoss;
 
-            mainData.cities[coinsObj.levelNumber].bestCollect = coinsObj.maxCoins;
-            mainData.cities[coinsObj.levelNumber].bestDistance = coinsObj.maxDistance;
-            mainData.cities[coinsObj.levelNumber].distanceTillBoss = (int)coinsObj.distanceTillBoss;
-
-            YandexGame.savesData.shopDataHandler = shopData;
-            YandexGame.savesData.citiesData = mainData;
-        });
+        YandexGame.savesData.shopDataHandler = shopData;
+        YandexGame.savesData.citiesData = cityData;
     }
 
     private void SpawnCoins()

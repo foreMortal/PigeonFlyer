@@ -12,5 +12,6 @@
         public ShopDataHandler shopDataHandler;
         public CitiesDataHandler citiesData;
         public int t;
+        public bool mute;
     }
 }

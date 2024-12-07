@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
 {
-    [SerializeField] private DistanceCounter counter;
+    [SerializeField] private PigeonSpawner counterHandler;
     [SerializeField] private float distanceToSpawn;
     [SerializeField] private bool reduceTime;
     [SerializeField] private List<Obstacle> hiddenObjects;
+
     private float distancePassed;
+    private DistanceCounter counter;
     private int lastObstacleIndex = -1;
 
     private void OnEnable()
@@ -17,6 +19,11 @@ public class ObstacleManager : MonoBehaviour
     private void OnDisable()
     {
         PigeonHealth.PigeonDied -= StopGame;
+    }
+
+    private void Start()
+    {
+        counter = counterHandler.Counter;
     }
 
     void StopGame()

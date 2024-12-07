@@ -46,12 +46,12 @@ public class EggsManager : MonoBehaviour
         }
     }
 
-    public void ThrowEgg(Vector3 vector)
+    public void ThrowEgg(Vector3 origin, Vector3 vector)
     {
         if (hiddenEggs.Count > 0)
         {
             hiddenEggs[0].gameObject.SetActive(true);
-            hiddenEggs[0].transform.SetPositionAndRotation(transform.position, Quaternion.identity);
+            hiddenEggs[0].transform.SetPositionAndRotation(origin, Quaternion.identity);
             hiddenEggs[0].FlyingVector = vector;
 
             activeEggs.Add(hiddenEggs[0]);
@@ -59,7 +59,7 @@ public class EggsManager : MonoBehaviour
         }
         else
         {
-            EggProjectile e = Instantiate(eggPrefab, transform.position, Quaternion.identity);
+            EggProjectile e = Instantiate(eggPrefab, origin, Quaternion.identity);
             e.SelfAwake(this);
             e.FlyingVector = vector;
             activeEggs.Add(e);

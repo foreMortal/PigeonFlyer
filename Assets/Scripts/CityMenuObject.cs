@@ -1,4 +1,7 @@
-public struct CityMenuObject : IMenuObject
+using System;
+
+[Serializable]
+public class CityMenuObject : IMenuObject
 {
     public int cityIndex, distanceTillBoss;
     public string cityName;

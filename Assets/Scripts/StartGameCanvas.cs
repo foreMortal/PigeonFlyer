@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class StartGameCanvas : MonoBehaviour, IInputTaker
 {
@@ -8,6 +9,7 @@ public class StartGameCanvas : MonoBehaviour, IInputTaker
     [SerializeField] private CoinsScriptableObject coinsObj;
     [SerializeField] private GameObject Hud;
     [SerializeField] private Text distanceTillBoss;
+
     private IInputManager inputManager;
 
     private void OnEnable()
@@ -19,7 +21,10 @@ public class StartGameCanvas : MonoBehaviour, IInputTaker
     private void Awake()
     {
         inputManager = InputHandler.GetComponent<IInputManager>();
-        distanceTillBoss.text = "Till Boss: " + coinsObj.distanceTillBoss.ToString("F0") + "<color=red>m</color>";
+        if(YandexGame.lang == "en")
+            distanceTillBoss.text = "Till Boss: " + coinsObj.distanceTillBoss.ToString("F0") + "<color=red>m</color>";
+        else if(YandexGame.lang == "ru")
+            distanceTillBoss.text = "До Босса: " + coinsObj.distanceTillBoss.ToString("F0") + "<color=red>m</color>";
         Hud.SetActive(false);
 
         transform.GetChild(0).gameObject.SetActive(true);
@@ -34,7 +39,9 @@ public class StartGameCanvas : MonoBehaviour, IInputTaker
     {
         Hud.SetActive(true);
         inputManager.ManageInputEvent(this, false);
-        Destroy(gameObject);
+        YandexGame.GameplayStart();
         Time.timeScale = 1;
+
+        Destroy(gameObject);
     }
 }
